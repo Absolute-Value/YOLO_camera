@@ -47,5 +47,6 @@ Saved 1 image to output
 
 
 ## ヒント
+* [PyTorch公式](https://pytorch.org/hub/ultralytics_yolov5/)
 * [YOLOの詳細](https://github.com/ultralytics/yolov5)
 * [resultで出力できるもの](https://github.com/ultralytics/yolov5/blob/master/models/common.py)
