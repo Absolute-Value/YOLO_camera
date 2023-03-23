@@ -1,0 +1,5 @@
+*.log
+*.pt
+__pycache__/
+origins/
+outputs/
