@@ -1,6 +1,23 @@
 # カメラ映像からYOLOで物体検出
 カメラの映像を用いて，YOLOで物体検出します．
 
+## 使用方法 (camera_yolov5.py)
+```console
+python camera_yolov5.py # すべて検出する場合
+python camera_yolov5.py --only_human # 人のみ検出する場合
+```
+
+### 引数
+| 引数名 | 説明 | デフォルト値 |
+| - | - | - |
+| pic_interval | 写真を撮る間隔（秒） | 5 |
+| det_interval | 物体を検出した際に次の検出をするまでの間隔（秒） | 60 |
+| log_dir | Logの出力先 | logs |
+| log_name | Logの名前 | anno.log |
+| log_mode | Logの書き込みモード | a |
+| original_img_dir | 検出した際の原画像の保存先 | origins |
+| result_img_dir | 検出した際の結果の保存先 | outputs |
+| only_human | 人のみ検出するか | False |
 
 ## ファイルの説明 (.py)
 

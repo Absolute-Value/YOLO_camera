@@ -8,13 +8,18 @@ WIDTH = 960
 HEIGHT = 720
 
 parser = argparse.ArgumentParser(description='test_yolo')
-parser.add_argument('--interval', type=int, default=10)
-parser.add_argument('--output_img_path', type=str, default='origins')
-parser.add_argument('--output_path', type=str, default='outputs')
-parser.add_argument('--only_human', action='store_true')
+parser.add_argument('--pic_interval', type=int, default=5, help='写真を撮る間隔（秒）')
+parser.add_argument('--det_interval', type=int, default=60, help='物体を検出した際に次の検出をするまでの間隔（秒）')
+parser.add_argument('--log_dir', type=str, default='logs', help='Logの出力先')
+parser.add_argument('--log_name', type=str, default='anno.log', help='Logの名前')
+parser.add_argument('--log_mode', type=str, default='a', help='Logの書き込みモード')
+parser.add_argument('--original_img_dir', type=str, default='origins', help='検出した際の原画像の保存先')
+parser.add_argument('--result_img_dir', type=str, default='outputs', help='検出した際の結果の保存先')
+parser.add_argument('--only_human', action='store_true', help='人のみ検出するか')
 args = parser.parse_args()
 
-logger = get_logger('./', 'anno.log')
+os.makedirs(args.log_dir, exist_ok=True)
+logger = get_logger(args.log_dir, args.log_name, args.log_mode)
 
 model = torch.hub.load('ultralytics/yolov5', 'yolov5l', pretrained=True)
 if args.only_human:
@@ -50,17 +55,20 @@ while True:
         img_name = f'{img_name}.png'
         result.files[0] = img_name
         logger.info(result.files[0])
-        os.makedirs(os.path.join(args.output_img_path, img_day_dir), exist_ok=True)
-        cv2.imwrite(os.path.join(args.output_img_path, img_day_dir, img_name), frame)
+        os.makedirs(os.path.join(args.original_img_dir, img_day_dir), exist_ok=True)
+        cv2.imwrite(os.path.join(args.original_img_dir, img_day_dir, img_name), frame)
         for pred in result.pred[0]:
             x1, y1, x2, y2, conf, obj_id = pred.to('cpu').detach().numpy()
             obj_name = result.names[int(obj_id)]
             logger.info(f'{x1} {y1} {x2} {y2} {conf} {int(obj_id)} {obj_name}')
-        result.save(save_dir=os.path.join(args.output_path, img_day_dir), exist_ok=True)
+        result.save(save_dir=os.path.join(args.result_img_dir, img_day_dir), exist_ok=True)
     
     cap.release()
     
     elasp_time = time.time() - start_time
     # print(elasp_time)
     
-    time.sleep(max(0,args.interval-elasp_time))
+    if len(result.pred[0]>0):
+        time.sleep(max(0,args.det_interval-elasp_time))
+    else:
+        time.sleep(max(0,args.pic_interval-elasp_time))
