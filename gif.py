@@ -1,10 +1,17 @@
 from PIL import Image
 import os
 import glob
+import argparse
+
+parser = argparse.ArgumentParser(description='gif')
+parser.add_argument('--in_dir', type=str, default='outputs/2023-03-24', help='gifを作るフォルダ')
+parser.add_argument('--in_file', type=str, default='*', help='見つけたいファイル名')
+parser.add_argument('--out_file', type=str, default='2023-03-24_15.gif', help='出力ファイル名')
+args = parser.parse_args()
  
 # GIFアニメーションを作成
-def create_gif(in_dir, out_filename):
-    path_list = sorted(glob.glob(os.path.join(*[in_dir, '14*']))) # ファイルパスをソートしてリストする
+def create_gif(in_dir, in_filename, out_filename):
+    path_list = sorted(glob.glob(os.path.join(*[in_dir, in_filename]))) # ファイルパスをソートしてリストする
     imgs = []                                                   # 画像をappendするための空配列を定義
  
     # ファイルのフルパスからファイル名と拡張子を抽出
@@ -17,4 +24,4 @@ def create_gif(in_dir, out_filename):
                  save_all=True, append_images=imgs[1:], optimize=False, duration=100, loop=0)
  
 # GIFアニメーションを作成する関数を実行する
-create_gif(in_dir='outputs/2023-03-24', out_filename='2023-03-24_14.gif')
+create_gif(in_dir=args.in_dir, in_filename=args.in_file, out_filename=args.out_file)
