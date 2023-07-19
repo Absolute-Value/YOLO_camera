@@ -15,7 +15,7 @@ parser.add_argument('--log_name', type=str, default='anno.log', help='Logの名�
 parser.add_argument('--log_mode', type=str, default='a', help='Logの書き込みモード')
 parser.add_argument('--original_img_dir', type=str, default='origins', help='検出した際の原画像の保存先')
 parser.add_argument('--result_img_dir', type=str, default='outputs', help='検出した際の結果の保存先')
-parser.add_argument('--only_human', action='store_true', help='人のみ検出するか')
+parser.add_argument('--only_human', action='store_false', help='人のみ検出するか')
 args = parser.parse_args()
 
 os.makedirs(args.log_dir, exist_ok=True)
